@@ -84,7 +84,7 @@ export const forgotPassword = async (req, res, next) => {
     const message = `
       <h1>You have requested a password reset</h1>
       <p>Please go to this link to reset your password:</p>
-      <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+      <a href="${resetUrl}" clicktracking="off">${resetUrl}</a>
     `;
 
     try {
@@ -96,7 +96,8 @@ export const forgotPassword = async (req, res, next) => {
 
       res.status(200).json({ success: true, message: "Email sent" });
     } catch (err) {
-      console.error(err);
+      console.error("❌ ERROR: Failed to send password reset email:");
+      console.error(err); // Logs the full error stack to Render
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
       await user.save({ validateBeforeSave: false });
