@@ -11,19 +11,14 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [resetUrl, setResetUrl] = useState('');
 
   const onFinish = async (values) => {
     setLoading(true);
     setError('');
     setSuccess('');
-    setResetUrl('');
     try {
       const response = await api.post('/auth/forgotpassword', { email: values.email });
       setSuccess(response.data.message || 'Email sent successfully. Please check your inbox.');
-      if (response.data.resetUrl) {
-        setResetUrl(response.data.resetUrl);
-      }
     } catch (err) {
       const detail = err.response?.data?.detail ? ` (${err.response.data.detail})` : '';
       setError((err.response?.data?.message || 'Failed to send reset email. Please try again.') + detail);
@@ -48,15 +43,6 @@ const ForgotPassword = () => {
             showIcon 
             className="login-alert" 
           />
-        )}
-        
-        {/* FALLBACK FOR RENDER DEMO MODE */}
-        {resetUrl && (
-            <div style={{ marginTop: '15px', marginBottom: '20px', textAlign: 'center' }}>
-                <Button type="primary" size="large" style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}>
-                    <a href={resetUrl.replace(window.location.origin, '')} style={{ color: 'white' }}>Demo: Click Here To Reset Password</a>
-                </Button>
-            </div>
         )}
 
         <Form

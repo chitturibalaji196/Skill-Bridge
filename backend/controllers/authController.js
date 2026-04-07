@@ -96,15 +96,15 @@ export const forgotPassword = async (req, res, next) => {
 
       res.status(200).json({ success: true, message: "Email sent successfully. Please check your inbox." });
     } catch (err) {
-      console.error("❌ ERROR: Failed to send password reset email (likely Render SMTP block):", err.message);
+      console.error("❌ ERROR: Failed to send password reset email:", err.message);
       
-      // FALLBACK FOR RENDER FREE TIER:
-      // Since Render blocks SMTP port 465, the email send will fail. 
-      // Instead of throwing an error, we return the reset URL directly to the frontend for demonstration purposes.
-      res.status(200).json({ 
-        success: true, 
-        message: "Email blocked by server. DEMO MODE: Use the link below to reset your password.",
-        resetUrl: resetUrl 
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+
+      return res.status(500).json({ 
+        message: "Email could not be sent. Please try again later.",
+        detail: err.message
       });
     }
   } catch (error) {
