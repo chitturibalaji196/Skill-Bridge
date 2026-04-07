@@ -74,10 +74,8 @@ export const forgotPassword = async (req, res, next) => {
     const resetToken = user.getResetPasswordToken();
     await user.save({ validateBeforeSave: false }); // Skip validation just in case
 
-    // Create reset url
-    // In production, this should point to your frontend domain
-    // E.g., const resetUrl = `${req.protocol}://${req.get("host")}/reset-password/${resetToken}`;
-    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    // Create reset url (using the CLIENT_URL from environment variables)
+    const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
     
     // Log for convenient backend testing
     console.log(`\n🔑 [DEV ONLY] Direct Password Reset Link:`);
