@@ -18,7 +18,9 @@ export const SocketProvider = ({ children }) => {
             return;
         }
 
-        const socketClient = io("http://localhost:5000", {
+        // Derive the base socket URL from API_URL (removing the /api suffix)
+        const socketUrl = API_URL.replace('/api', '');
+        const socketClient = io(socketUrl, {
             autoConnect: false,
             transports: ['websocket'],
             auth: {
