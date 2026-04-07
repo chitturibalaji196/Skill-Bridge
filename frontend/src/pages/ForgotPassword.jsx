@@ -20,7 +20,8 @@ const ForgotPassword = () => {
       const response = await api.post('/auth/forgotpassword', { email: values.email });
       setSuccess(response.data.message || 'Email sent successfully. Please check your inbox.');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send reset email. Please try again.');
+      const detail = err.response?.data?.detail ? ` (${err.response.data.detail})` : '';
+      setError((err.response?.data?.message || 'Failed to send reset email. Please try again.') + detail);
     } finally {
       setLoading(false);
     }

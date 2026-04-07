@@ -102,7 +102,13 @@ export const forgotPassword = async (req, res, next) => {
       user.resetPasswordExpire = undefined;
       await user.save({ validateBeforeSave: false });
 
-      return res.status(500).json({ message: "Email could not be sent" });
+      const errorDetail = err.message || "Unknown error";
+      const hasSMTP = !!(process.env.SMTP_USER && process.env.SMTP_PASS);
+      return res.status(500).json({ 
+        message: "Email could not be sent", 
+        detail: errorDetail,
+        smtpConfigured: hasSMTP
+      });
     }
   } catch (error) {
     next(error);
